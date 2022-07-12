@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/Scorpion/Go-Projects/yIntel'
+make: Leaving directory `/Users/Scorpion/Go-Projects/yIntel'
+ 
+make: *** No targets.  Stop.
+
