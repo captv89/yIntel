@@ -22,3 +22,6 @@ go.work
 
 # Enviornment variables used by the Go build process
 .env
+
+# Sampe stories.json
+stories.json
