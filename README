@@ -1,6 +1,6 @@
 # TELEGRAM BOT FOR PERSONAL ENTERTAINMENT
 
-![bot](tbot.png)
+![bot](https://i.ibb.co/5YfsnKD/tbot.png)
 
 A telegram bot build using [tgbotapi](https://pkg.go.dev/github.com/go-telegram-bot-api/telegram-bot-api/v5@v5.5.1) golang library to check data from various interesting opensource APIs and reply to me via telegram chat.
 
