@@ -57,7 +57,7 @@ func StartBot() {
 		// Extract the command from the Message.
 		switch update.Message.Command() {
 		case "help":
-			msg.Text = "I understand:\n /sayhi : Just a simple Hi! \n /status : Check bot's health status. \n /topten : Top 10 news from hackernews.\n /random : Random news from hackernews. \n /euro : Checks current exchange rate EUR-INR. \n /usd : Checks current exchange rate EUR-INR."
+			msg.Text = "I understand:\n /sayhi : Just a simple Hi! \n /status : Check bot's health status. \n /topten : Top 10 news from hackernews.\n /random : Random news from hackernews. \n /euro : Checks current exchange rate EUR-INR. \n /usd : Checks current exchange rate EUR-INR.\n /joke : Random joke from Joke API.\n /chuck : Random joke from Chuck Norris API. \n /dadjoke : Random dad jokes. \n /meme : Random memes."
 		case "sayhi":
 			msg.Text = "Hi :)"
 		case "status":
@@ -70,6 +70,14 @@ func StartBot() {
 			sendExchangeRate(bot, update.Message.Chat.ID, "eur")
 		case "usd":
 			sendExchangeRate(bot, update.Message.Chat.ID, "usd")
+		case "joke":
+			sendJokes(bot, update.Message.Chat.ID)
+		case "chuck":
+			sendChuckJokes(bot, update.Message.Chat.ID)
+		case "dadjoke":
+			sendDadJokes(bot, update.Message.Chat.ID)
+		case "meme":
+			sendMeme(bot, update.Message.Chat.ID)
 		default:
 			msg.Text = "I don't know that command"
 		}
@@ -86,6 +94,8 @@ func StartBot() {
 		}
 	}
 }
+
+//  Bot helper functions
 
 func sendTopTenNews(bot *tgbot.BotAPI, chatID int64) {
 	hackerNews := operation.Top10Stories()
@@ -114,5 +124,92 @@ func sendExchangeRate(bot *tgbot.BotAPI, chatID int64, currency string) {
 	_, err := bot.Send(msg)
 	if err != nil {
 		log.Panic(err)
+	}
+}
+
+func sendJokes(bot *tgbot.BotAPI, chatID int64) {
+	joke, status := api.Jokes()
+
+	if status == true {
+		jokeMsg := fmt.Sprintf("Category: %s\nType: %s\nJoke: %s", joke.Category, joke.JokeType, joke.Joke)
+
+		msg := tgbot.NewMessage(chatID, jokeMsg)
+		_, err := bot.Send(msg)
+		if err != nil {
+			log.Panic(err)
+		}
+
+	} else {
+		msg := tgbot.NewMessage(chatID, "Sorry, I couldn't find any jokes. Try again later.")
+		_, err := bot.Send(msg)
+		if err != nil {
+			log.Panic(err)
+		}
+	}
+}
+
+func sendChuckJokes(bot *tgbot.BotAPI, chatID int64) {
+	joke, status := api.Chuck()
+
+	if status == true {
+		jokeMsg := fmt.Sprintf("Joke: %s", joke.Value)
+
+		msg := tgbot.NewMessage(chatID, jokeMsg)
+		_, err := bot.Send(msg)
+		if err != nil {
+			log.Panic(err)
+		}
+
+	} else {
+		msg := tgbot.NewMessage(chatID, "Sorry, I couldn't find any jokes. Try again later.")
+		_, err := bot.Send(msg)
+		if err != nil {
+			log.Panic(err)
+		}
+	}
+}
+
+func sendDadJokes(bot *tgbot.BotAPI, chatID int64) {
+	joke, status := api.DadJokes()
+
+	if status == true {
+		jokeMsg := fmt.Sprintf("Joke: %s", joke.Joke)
+
+		msg := tgbot.NewMessage(chatID, jokeMsg)
+		_, err := bot.Send(msg)
+		if err != nil {
+			log.Panic(err)
+		}
+
+	} else {
+		msg := tgbot.NewMessage(chatID, "Sorry, I couldn't find any jokes. Try again later.")
+		_, err := bot.Send(msg)
+		if err != nil {
+			log.Panic(err)
+		}
+	}
+}
+
+
+func sendMeme(bot *tgbot.BotAPI, chatID int64) {
+	meme, status := api.Meme()
+
+	if status == true {
+		memeMsg := fmt.Sprintf("%s by %s", meme.Title, meme.Author)
+		memeUrl := fmt.Sprintf("%s", meme.URL)
+		msg := tgbot.NewPhoto(chatID, tgbot.FileURL(memeUrl))
+		msg.Caption = memeMsg
+		_, err := bot.Send(msg)
+		if err != nil {
+			log.Panic(err)
+		}
+
+
+	} else {
+		msg := tgbot.NewMessage(chatID, "Sorry, I couldn't find any memes. Try again later.")
+		_, err := bot.Send(msg)
+		if err != nil {
+			log.Panic(err)
+		}
 	}
 }
