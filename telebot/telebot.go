@@ -3,29 +3,42 @@ package telebot
 import (
 	"fmt"
 	"log"
-	"os"
-	"strconv"
 
 	"github.com/captv89/yIntel/api"
+	"github.com/captv89/yIntel/models"
 	operation "github.com/captv89/yIntel/ops"
 	tgbot "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func StartBot() {
-	bot, err := tgbot.NewBotAPI(os.Getenv("TELEGRAM_APITOKEN"))
+var config *models.Config
+
+func StartBot(c *models.Config) {
+	// Assign config to global variable
+	config = c
+
+	// log.Println("Received Config",config)
+
+	log.Println("Starting bot... TelegramToken: ", config.TelegramToken)
+	bot, err := tgbot.NewBotAPI(config.TelegramToken)
 	if err != nil {
 		log.Panic(err)
 	}
 
 	bot.Debug = true
 
-	vUserId, _ := strconv.ParseInt(os.Getenv("V_ID"), 10, 64)
-	sUserId, _ := strconv.ParseInt(os.Getenv("S_ID"), 10, 64)
+	// vUserId, _ := strconv.ParseInt(os.Getenv("V_ID"), 10, 64)
+	// sUserId, _ := strconv.ParseInt(os.Getenv("S_ID"), 10, 64)
+	// vishalUserId, _ := strconv.ParseInt(os.Getenv("VISHAL_ID"), 10, 64)
 
-	log.Printf("Authorized user ids %d, %d", vUserId, sUserId)
+	validUsers := make(map[int64]bool)
+
+	for i := 0; i < len(config.AllowedIds); i++ {
+		log.Println("AllowedId: ", config.AllowedIds[i])
+		validUsers[config.AllowedIds[i]] = true
+	}
 
 	// Allowed users for the bot
-	validUsers := map[int64]bool{vUserId: true, sUserId: true}
+	// validUsers := map[int64]bool{vUserId: true, sUserId: true, vishalUserId: true}
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
@@ -190,7 +203,6 @@ func sendDadJokes(bot *tgbot.BotAPI, chatID int64) {
 	}
 }
 
-
 func sendMeme(bot *tgbot.BotAPI, chatID int64) {
 	meme, status := api.Meme()
 
@@ -203,7 +215,6 @@ func sendMeme(bot *tgbot.BotAPI, chatID int64) {
 		if err != nil {
 			log.Panic(err)
 		}
-
 
 	} else {
 		msg := tgbot.NewMessage(chatID, "Sorry, I couldn't find any memes. Try again later.")

@@ -19,9 +19,12 @@
 
 # Go workspace file
 go.work
+.vscode/*
+
 
 # Enviornment variables used by the Go build process
 .env
+config.yml
 
 # Sampe stories.json
 stories.json
