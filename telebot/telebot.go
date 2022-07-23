@@ -70,7 +70,7 @@ func StartBot(c *models.Config) {
 		// Extract the command from the Message.
 		switch update.Message.Command() {
 		case "help":
-			msg.Text = "I understand:\n /sayhi : Just a simple Hi! \n /status : Check bot's health status. \n /topten : Top 10 news from hackernews.\n /random : Random news from hackernews. \n /euro : Checks current exchange rate EUR-INR. \n /usd : Checks current exchange rate EUR-INR.\n /joke : Random joke from Joke API.\n /chuck : Random joke from Chuck Norris API. \n /dadjoke : Random dad jokes. \n /meme : Random memes."
+			msg.Text = "I understand:\n /sayhi : Just a simple Hi! \n /status : Check bot's health status. \n /topten : Top 10 news from hackernews.\n /random : Random news from hackernews. \n /euro : Checks current exchange rate EUR-INR. \n /usd : Checks current exchange rate EUR-INR.\n /chuck : Random joke from Chuck Norris API. \n /dadjoke : Random dad jokes. \n /meme : Random memes."
 		case "sayhi":
 			msg.Text = "Hi :)"
 		case "status":
